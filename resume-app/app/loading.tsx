@@ -1,8 +1,13 @@
 export default function Loading() {
 	return (
-		<main className="max-w-5xl mx-auto px-6 py-16 space-y-6">
-			<div className="card animate-pulse h-10 w-1/3" />
-			<div className="card animate-pulse h-40" />
-		</main>
+		<div className="min-h-screen flex items-center justify-center">
+			<div className="card flex items-center gap-3">
+				<div className="w-3 h-3 rounded-full bg-indigo-500 animate-bounce" />
+				<div className="w-3 h-3 rounded-full bg-indigo-500 animate-bounce [animation-delay:150ms]" />
+				<div className="w-3 h-3 rounded-full bg-indigo-500 animate-bounce [animation-delay:300ms]" />
+
+				<span className="text-muted ml-3">Loading home page...</span>
+			</div>
+		</div>
 	);
 }
