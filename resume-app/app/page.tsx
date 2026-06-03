@@ -4,7 +4,15 @@ import ProjectCarousel from "@/app/ui/ProjectCarousel";
 import ContactForm from "@/app/ui/ContactForm";
 import WeatherCard from "@/app/ui/WeatherCard";
 
-export default function Home() {
+// 👇 forces a real loading delay so loading.tsx shows
+function sleep(ms: number) {
+	return new Promise((res) => setTimeout(res, ms));
+}
+
+export default async function Home() {
+	// ⏱️ adjust this number to control loading time
+	await sleep(1500);
+
 	return (
 		<div className="min-h-screen bg-background text-foreground">
 			<main className="max-w-5xl mx-auto px-6 py-16 space-y-20">
@@ -44,7 +52,6 @@ export default function Home() {
 				{/* WEATHER */}
 				<section className="space-y-4">
 					<h2 className="text-xl font-semibold">Weather</h2>
-
 					<WeatherCard />
 				</section>
 

@@ -2,10 +2,14 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
+
+	const reason = searchParams.get("reason");
+
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 
@@ -36,6 +40,13 @@ export default function LoginPage() {
 	return (
 		<main className="min-h-screen flex items-center justify-center bg-background text-foreground px-4">
 			<div className="w-full max-w-sm card space-y-6">
+				{/* ✅ CONTEXT MESSAGE */}
+				{reason === "dashboard" && (
+					<div className="text-sm text-yellow-300 border border-yellow-500 p-3 rounded-md">
+						You must be logged in or registered to view the dashboard page.
+					</div>
+				)}
+
 				<h1 className="text-2xl font-semibold">Login</h1>
 
 				<form onSubmit={onSubmit} className="space-y-4">

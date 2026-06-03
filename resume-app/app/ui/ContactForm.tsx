@@ -1,86 +1,61 @@
-import Image from "next/image";
-import Link from "next/link";
-import ProjectCarousel from "@/app/ui/ProjectCarousel";
-import ContactForm from "@/app/ui/ContactForm";
-import WeatherCard from "@/app/ui/WeatherCard";
+"use client";
 
-export default function Home() {
+import { useState, useTransition } from "react";
+
+export default function ContactForm() {
+	const [name, setName] = useState("");
+	const [email, setEmail] = useState("");
+	const [message, setMessage] = useState("");
+	const [isPending, startTransition] = useTransition();
+
+	function handleSubmit(e: React.FormEvent) {
+		e.preventDefault();
+
+		startTransition(() => {
+			console.log("Contact Form Submission:", {
+				name,
+				email,
+				message,
+			});
+
+			// reset form
+			setName("");
+			setEmail("");
+			setMessage("");
+		});
+	}
+
 	return (
-		<div className="min-h-screen bg-background text-foreground">
-			<main className="max-w-5xl mx-auto px-6 py-16 space-y-20">
-				{/* HERO */}
-				<section className="space-y-6">
-					{/* WEATHER */}
-					<div className="max-w-sm">
-						<WeatherCard />
-					</div>
+		<form onSubmit={handleSubmit} className="space-y-3">
+			<input
+				className="input"
+				placeholder="Name"
+				value={name}
+				onChange={(e) => setName(e.target.value)}
+				required
+			/>
 
-					<Image src="/next.svg" alt="Next.js logo" width={100} height={20} priority />
+			<input
+				className="input"
+				placeholder="Email"
+				type="email"
+				value={email}
+				onChange={(e) => setEmail(e.target.value)}
+				required
+			/>
 
-					<div className="space-y-3">
-						<h1 className="text-4xl font-semibold tracking-tight">Portfolio App</h1>
+			<textarea
+				className="input"
+				placeholder="Message"
+				value={message}
+				onChange={(e) => setMessage(e.target.value)}
+				rows={5}
+				required
+			/>
 
-						<p className="text-muted max-w-xl leading-7">
-							Articles, authentication, comments, dashboard tools, and dynamic UI features
-							built with App Router.
-						</p>
-					</div>
-				</section>
-
-				{/* ACTIONS */}
-				<section className="flex flex-wrap gap-3">
-					<Link href="/articles" className="btn btn-primary">
-						Articles
-					</Link>
-
-					<Link href="/dashboard/comments" className="btn btn-secondary">
-						Dashboard
-					</Link>
-
-					<Link href="/login" className="btn btn-secondary">
-						Login
-					</Link>
-
-					<Link href="/register" className="btn btn-secondary">
-						Register
-					</Link>
-				</section>
-
-				{/* PROJECTS */}
-				<section className="space-y-4">
-					<h2 className="text-xl font-semibold">Featured Projects</h2>
-
-					<div className="card">
-						<ProjectCarousel />
-					</div>
-				</section>
-
-				{/* FEATURES */}
-				<section className="space-y-3">
-					<h2 className="text-base font-semibold">Included Features</h2>
-
-					<div className="card space-y-2 text-sm text-muted">
-						<p>✔ Authentication (NextAuth)</p>
-						<p>✔ Server Actions + Neon Postgres CRUD</p>
-						<p>✔ Articles + comment system</p>
-						<p>✔ Weather API integration</p>
-						<p>✔ Reusable UI system (buttons, cards, inputs)</p>
-					</div>
-				</section>
-
-				{/* CONTACT */}
-				<section className="space-y-4">
-					<h2 className="text-xl font-semibold">Contact</h2>
-
-					<p className="text-muted max-w-xl">
-						Have a question or want to collaborate? Send a message below.
-					</p>
-
-					<div className="card">
-						<ContactForm />
-					</div>
-				</section>
-			</main>
-		</div>
+			<button className="btn btn-primary" type="submit" disabled={isPending}>
+				{isPending ? "Sending..." : "Send Message"}
+			</button>
+		</form>
 	);
 }

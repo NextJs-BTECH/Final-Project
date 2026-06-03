@@ -5,6 +5,11 @@ import CommentForm from "@/app/ui/CommentForm";
 import { auth } from "@/auth";
 import CommentActions from "@/app/ui/CommentActions";
 
+// ⏱ optional: match homepage/articles loading delay if you're standardizing UX
+function sleep(ms: number) {
+	return new Promise((res) => setTimeout(res, ms));
+}
+
 export default async function ArticlePage({
 	params,
 }: {
@@ -14,6 +19,8 @@ export default async function ArticlePage({
 
 	const cleanSlug = slug?.trim();
 	if (!cleanSlug) notFound();
+
+	await sleep(1500);
 
 	const article = await sql`
 		SELECT * FROM articles
@@ -25,49 +32,57 @@ export default async function ArticlePage({
 
 	const currentArticle = article[0];
 	const comments = await getCommentsByArticle(currentArticle.id);
-
 	const session = await auth();
 
 	return (
 		<main className="max-w-5xl mx-auto px-6 py-16 space-y-10">
-			{/* ARTICLE */}
+			{/* ARTICLE HEADER */}
 			<header className="space-y-3">
 				<h1 className="text-3xl font-semibold">{currentArticle.title}</h1>
+
 				<p className="text-muted italic">{currentArticle.excerpt}</p>
 			</header>
 
+			{/* ARTICLE BODY */}
 			<article className="card space-y-4">
 				<p className="leading-7">{currentArticle.content}</p>
 			</article>
 
 			<hr className="border-border" />
 
-			{/* COMMENTS */}
+			{/* COMMENTS SECTION */}
 			<section className="space-y-6">
 				<h2 className="text-xl font-semibold">Comments</h2>
 
-				<div className="card">
-					<CommentForm articleId={currentArticle.id} />
-				</div>
-
-				<ul className="grid gap-3">
+				{/* COMMENTS FIRST */}
+				<ul className="space-y-4">
 					{comments.length === 0 ? (
-						<p className="text-muted">No comments yet.</p>
+						<li className="card">
+							<p className="text-muted">No comments yet. Be the first to comment.</p>
+						</li>
 					) : (
 						comments.map((c) => (
-							<li key={c.id} className="card space-y-2">
-								<div className="flex justify-between items-center">
+							<li key={c.id} className="card space-y-3">
+								{/* TOP ROW */}
+								<div className="flex justify-between items-start">
 									<strong className="text-sm">{c.name ?? "Unknown user"}</strong>
 
-									{/* ONLY OWNER CAN SEE ACTIONS */}
 									{session?.user?.id === c.user_id && <CommentActions comment={c} />}
 								</div>
 
-								<p className="text-sm text-muted">{c.content}</p>
+								{/* CONTENT */}
+								<p className="text-sm text-muted leading-6">{c.content}</p>
 							</li>
 						))
 					)}
 				</ul>
+
+				{/* COMMENT FORM LAST */}
+				<div className="card space-y-3">
+					<h3 className="text-sm font-semibold">Write a comment</h3>
+
+					<CommentForm articleId={currentArticle.id} />
+				</div>
 			</section>
 		</main>
 	);

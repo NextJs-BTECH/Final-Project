@@ -6,26 +6,31 @@ import { createCommentAction } from "@/app/lib/actions";
 export default function CommentForm({ articleId }: { articleId: number }) {
 	const [content, setContent] = useState("");
 	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
 	async function submit() {
 		setLoading(true);
+		setError(null);
 
-		try {
-			await createCommentAction({
-				articleId,
-				content,
-			});
+		const res = await createCommentAction({
+			articleId,
+			content,
+		});
 
+		if (res?.error === "UNAUTHORIZED_COMMENT") {
+			setError("You must be logged in to post comments");
+		} else if (res?.error === "EMPTY_COMMENT") {
+			setError("Comment cannot be empty");
+		} else {
 			setContent("");
 			window.location.reload();
-		} finally {
-			setLoading(false);
 		}
+
+		setLoading(false);
 	}
 
 	return (
 		<div className="space-y-3">
-			{/* TEXT AREA */}
 			<textarea
 				value={content}
 				onChange={(e) => setContent(e.target.value)}
@@ -33,7 +38,6 @@ export default function CommentForm({ articleId }: { articleId: number }) {
 				className="input min-h-[90px] resize-none"
 			/>
 
-			{/* BUTTON ROW */}
 			<div className="flex justify-end">
 				<button
 					onClick={submit}
@@ -43,6 +47,8 @@ export default function CommentForm({ articleId }: { articleId: number }) {
 					{loading ? "Posting..." : "Post Comment"}
 				</button>
 			</div>
+
+			{error && <p className="text-sm text-red-400">{error}</p>}
 		</div>
 	);
 }
