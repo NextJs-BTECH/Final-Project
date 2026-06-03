@@ -10,6 +10,11 @@ export default function Home() {
 			<main className="max-w-5xl mx-auto px-6 py-16 space-y-20">
 				{/* HERO */}
 				<section className="space-y-6">
+					{/* WEATHER */}
+					<div className="max-w-sm">
+						<WeatherCard />
+					</div>
+
 					<Image src="/next.svg" alt="Next.js logo" width={100} height={20} priority />
 
 					<div className="space-y-3">
@@ -39,13 +44,6 @@ export default function Home() {
 					<Link href="/register" className="btn btn-secondary">
 						Register
 					</Link>
-				</section>
-
-				{/* WEATHER */}
-				<section className="space-y-4">
-					<h2 className="text-xl font-semibold">Weather</h2>
-
-					<WeatherCard />
 				</section>
 
 				{/* PROJECTS */}
