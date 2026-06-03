@@ -4,7 +4,6 @@ import ProjectCarousel from "@/app/ui/ProjectCarousel";
 import ContactForm from "@/app/ui/ContactForm";
 import WeatherCard from "@/app/ui/WeatherCard";
 
-// 👇 forces a real loading delay so loading.tsx shows
 function sleep(ms: number) {
 	return new Promise((res) => setTimeout(res, ms));
 }
