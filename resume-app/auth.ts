@@ -46,7 +46,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 			if (user) {
 				token.id = user.id;
 				token.email = user.email;
-				token.name = user.name; // ✅ guaranteed now
+				token.name = user.name; 
 			}
 			return token;
 		},
